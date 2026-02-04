@@ -32,6 +32,9 @@ fn main() -> anyhow::Result<()> {
             command::rm::spec()
         )
         .subcommand(
+            command::load::spec()
+        )
+        .subcommand(
             command::ai_init::spec()
         )
         .subcommand(
@@ -49,6 +52,9 @@ fn main() -> anyhow::Result<()> {
         }
         Some(("rm", _)) => {
             command::rm::action()
+        }
+        Some(("load", _)) => {
+            command::load::action()
         }
         Some(("ai-init", _)) => {
             command::ai_init::action()

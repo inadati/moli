@@ -112,7 +112,7 @@ moli_install
 - `moli new`: 対話的プロンプトで新しいプロジェクトを初期化
 - `moli new --lang <言語>`: 指定言語で新しいプロジェクトを初期化（AI向け）
 - `moli up`: 現在の`moli.yml`仕様に基づいてコードを生成
-- `moli ai-init`: Claude Code向けのカスタムコマンドを生成
+- `moli claude-skill`: Claude Code向けのmoli開発スキルを生成
 - `moli --help`: ヘルプ情報を表示
 - `moli --version`: バージョン情報を表示
 

@@ -32,7 +32,7 @@ cargo run -- up           # コード生成
 
 4層構造:
 
-- **`src/cli/`** - CLIコマンド層（clap）。`new`, `up`, `ai-init`, `completion`サブコマンド
+- **`src/cli/`** - CLIコマンド層（clap）。`new`, `up`, `claude-skill`, `completion`サブコマンド
 - **`src/project_management/config/`** - YAML設定の解析（`parser.rs`）、バリデーション（`validator.rs`）、データモデル（`models.rs`）
 - **`src/code_generation/core/`** - コード生成エンジン。`generator.rs`がエントリーポイントで、`directory_builder.rs`と`file_builder.rs`に委譲
 - **`src/code_generation/language/`** - 言語別の生成処理（`rust/`, `go/`, `python/`, `typescript/`, `javascript/`, `any/`）

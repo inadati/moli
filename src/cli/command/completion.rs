@@ -89,8 +89,8 @@ fn build_cli() -> Command {
                 )
         )
         .subcommand(
-            Command::new("ai-init")
-                .about("Generate Claude Code custom command for moli initialization")
+            Command::new("claude-skill")
+                .about("Generate Claude Code skill for moli-based system development")
         )
         .subcommand(spec())
         .version(version)

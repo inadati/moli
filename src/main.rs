@@ -35,7 +35,7 @@ fn main() -> anyhow::Result<()> {
             command::load::spec()
         )
         .subcommand(
-            command::ai_init::spec()
+            command::claude_skill::spec()
         )
         .subcommand(
             command::completion::spec()
@@ -56,8 +56,8 @@ fn main() -> anyhow::Result<()> {
         Some(("load", _)) => {
             command::load::action()
         }
-        Some(("ai-init", _)) => {
-            command::ai_init::action()
+        Some(("claude-skill", _)) => {
+            command::claude_skill::action()
         }
         Some(("completion", sub_matches)) => {
             command::completion::action(sub_matches)

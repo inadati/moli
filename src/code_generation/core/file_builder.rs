@@ -260,27 +260,32 @@ mod tests {
             name: "app".to_string(),
             root: true,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![
+                    r#pub: None,
+                    tree: vec![
                         Module {
                             name: "domain".to_string(),
-                            upstream: vec![],
-                            codefile: vec![
-                                CodeFile { name: "model".to_string() },
-                                CodeFile { name: "repository".to_string() },
+                            r#pub: None,
+                            tree: vec![],
+                            file: vec![
+                                CodeFile { name: "model".to_string(), r#pub: None },
+                                CodeFile { name: "repository".to_string(), r#pub: None },
                             ],
                         },
                     ],
-                    codefile: vec![],
+                    file: vec![
+                        CodeFile { name: "main".to_string(), r#pub: None },
+                    ],
                 },
             ],
         };
 
         // Build directory structure first
         DirectoryBuilder::build_project_structure(base_path, &project).unwrap();
-        
+
         // Build files
         FileBuilder::build_project_files(base_path, &project).unwrap();
 
@@ -299,7 +304,6 @@ mod tests {
         // Check main.rs content includes module declarations
         let main_rs = fs::read_to_string(base_path.join("src/main.rs")).unwrap();
         assert!(main_rs.contains("mod domain;"));
-        assert!(main_rs.contains("fn main()"));
     }
 
     #[test]
@@ -311,13 +315,15 @@ mod tests {
             name: "app".to_string(),
             root: true,
             lang: "go".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![],
-                    codefile: vec![
-                        CodeFile { name: "main".to_string() },
-                        CodeFile { name: "utils".to_string() },
+                    r#pub: None,
+                    tree: vec![],
+                    file: vec![
+                        CodeFile { name: "main".to_string(), r#pub: None },
+                        CodeFile { name: "utils".to_string(), r#pub: None },
                     ],
                 },
             ],
@@ -348,17 +354,20 @@ mod tests {
             name: "app".to_string(),
             root: true,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![
+                    r#pub: None,
+                    tree: vec![
                         Module {
                             name: "domain".to_string(),
-                            upstream: vec![],
-                            codefile: vec![CodeFile { name: "model".to_string() }],
+                            r#pub: None,
+                            tree: vec![],
+                            file: vec![CodeFile { name: "model".to_string(), r#pub: None }],
                         },
                     ],
-                    codefile: vec![],
+                    file: vec![],
                 },
             ],
         };

@@ -136,17 +136,20 @@ mod tests {
             name: "app".to_string(),
             root: true,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![
+                    r#pub: None,
+                    tree: vec![
                         Module {
                             name: "domain".to_string(),
-                            upstream: vec![],
-                            codefile: vec![],
+                            r#pub: None,
+                            tree: vec![],
+                            file: vec![],
                         },
                     ],
-                    codefile: vec![],
+                    file: vec![],
                 },
             ],
         };
@@ -167,11 +170,13 @@ mod tests {
             name: "backend".to_string(),
             root: false,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![],
-                    codefile: vec![],
+                    r#pub: None,
+                    tree: vec![],
+                    file: vec![],
                 },
             ],
         };
@@ -189,23 +194,27 @@ mod tests {
             name: "app".to_string(),
             root: true,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![
+                    r#pub: None,
+                    tree: vec![
                         Module {
                             name: "domain".to_string(),
-                            upstream: vec![
+                            r#pub: None,
+                            tree: vec![
                                 Module {
                                     name: "model".to_string(),
-                                    upstream: vec![],
-                                    codefile: vec![],
+                                    r#pub: None,
+                                    tree: vec![],
+                                    file: vec![],
                                 },
                             ],
-                            codefile: vec![],
+                            file: vec![],
                         },
                     ],
-                    codefile: vec![],
+                    file: vec![],
                 },
             ],
         };
@@ -227,11 +236,13 @@ mod tests {
             name: "app".to_string(),
             root: true,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![],
-                    codefile: vec![],
+                    r#pub: None,
+                    tree: vec![],
+                    file: vec![],
                 },
             ],
         };
@@ -253,11 +264,13 @@ mod tests {
             name: "backend".to_string(),
             root: false,
             lang: "rust".to_string(),
-            upstream: vec![
+            file: vec![],
+            tree: vec![
                 Module {
                     name: "src".to_string(),
-                    upstream: vec![],
-                    codefile: vec![],
+                    r#pub: None,
+                    tree: vec![],
+                    file: vec![],
                 },
             ],
         };

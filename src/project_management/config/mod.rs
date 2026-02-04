@@ -2,6 +2,8 @@
 pub mod parser;
 pub mod validator;
 pub mod models;
+pub mod path_collector;
+pub mod yaml_modifier;
 // end auto exported by moli.
 
 // Re-exports for convenience

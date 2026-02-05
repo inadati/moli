@@ -18,8 +18,9 @@ impl GoPackageGenerator {
         module: &Module,
         parent_modules: &[String],
     ) -> Result<()> {
-        let module_path = base_path.as_ref().join(&module.name);
-        
+        let module_name = module.name();
+        let module_path = base_path.as_ref().join(&module_name);
+
         // Create directory
         fs::create_dir_all(&module_path)
             .with_context(|| format!("Failed to create directory: {}", module_path.display()))?;
@@ -33,7 +34,7 @@ impl GoPackageGenerator {
             if !file_path.exists() {
                 // Only add package declaration for Go code files
                 let content = if Self::is_go_code_file(&filename) {
-                    let package_name = Self::get_package_name_for_module(&module.name, codefile.name());
+                    let package_name = Self::get_package_name_for_module(&module_name, codefile.name());
                     Self::generate_go_file_content(&package_name)
                 } else {
                     String::new() // Non-Go files get no content

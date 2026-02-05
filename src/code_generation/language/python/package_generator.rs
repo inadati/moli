@@ -19,7 +19,8 @@ impl PythonPackageGenerator {
         module: &Module,
         parent_modules: &[String],
     ) -> Result<()> {
-        let module_path = base_path.as_ref().join(&module.name);
+        let module_name = module.name();
+        let module_path = base_path.as_ref().join(&module_name);
         
         // Create directory
         fs::create_dir_all(&module_path)

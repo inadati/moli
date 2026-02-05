@@ -77,8 +77,9 @@ impl PathCollector {
         parent_modules: &[String],
         entries: &mut Vec<ManagedFile>,
     ) {
+        let module_name = module.name();
         let mut current_module_path = parent_modules.to_vec();
-        current_module_path.push(module.name().to_string());
+        current_module_path.push(module_name.clone());
 
         let module_dir = format!("{}{}/", base_path, current_module_path.join("/"));
 
@@ -86,7 +87,7 @@ impl PathCollector {
         entries.push(ManagedFile {
             display_path: module_dir.clone(),
             project_index,
-            file_name: module.name().to_string(),
+            file_name: module_name,
             module_path: parent_modules.to_vec(),
             is_project_level: false,
             is_directory: true,
@@ -137,10 +138,12 @@ mod tests {
             lang: "rust".to_string(),
             file: vec![],
             tree: vec![Module {
-                name: "src".to_string(),
+                name: Some("src".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![Module {
-                    name: "domain".to_string(),
+                    name: Some("domain".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![
@@ -171,10 +174,12 @@ mod tests {
             lang: "rust".to_string(),
             file: vec![],
             tree: vec![Module {
-                name: "src".to_string(),
+                name: Some("src".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![Module {
-                    name: "domain".to_string(),
+                    name: Some("domain".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![
@@ -208,10 +213,12 @@ mod tests {
             lang: "rust".to_string(),
             file: vec![],
             tree: vec![Module {
-                name: "src".to_string(),
+                name: Some("src".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![Module {
-                    name: "domain".to_string(),
+                    name: Some("domain".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![],
@@ -240,7 +247,8 @@ mod tests {
                 CodeFile { name: "main".to_string(), r#pub: None },
             ],
             tree: vec![Module {
-                name: "pkg".to_string(),
+                name: Some("pkg".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![],
                 file: vec![
@@ -284,10 +292,12 @@ mod tests {
             lang: "rust".to_string(),
             file: vec![],
             tree: vec![Module {
-                name: "src".to_string(),
+                name: Some("src".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![Module {
-                    name: "domain".to_string(),
+                    name: Some("domain".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![
@@ -313,7 +323,8 @@ mod tests {
             lang: "typescript".to_string(),
             file: vec![],
             tree: vec![Module {
-                name: "src".to_string(),
+                name: Some("src".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![],
                 file: vec![

@@ -263,11 +263,13 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![
                         Module {
-                            name: "domain".to_string(),
+                            name: Some("domain".to_string()),
+                            from: None,
                             r#pub: None,
                             tree: vec![],
                             file: vec![
@@ -318,7 +320,8 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![
@@ -357,11 +360,13 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![
                         Module {
-                            name: "domain".to_string(),
+                            name: Some("domain".to_string()),
+                            from: None,
                             r#pub: None,
                             tree: vec![],
                             file: vec![CodeFile { name: "model".to_string(), r#pub: None }],

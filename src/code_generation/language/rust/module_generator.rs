@@ -38,7 +38,8 @@ impl RustModuleGenerator {
         module: &Module,
         parent_modules: &[String],
     ) -> Result<()> {
-        let module_path = base_path.as_ref().join(&module.name);
+        let module_name = module.name();
+        let module_path = base_path.as_ref().join(&module_name);
 
         // Create directory
         fs::create_dir_all(&module_path)
@@ -69,7 +70,7 @@ impl RustModuleGenerator {
         // Process subtree recursively
         for submodule in module.subtree() {
             let mut new_parent_modules = parent_modules.to_vec();
-            new_parent_modules.push(module.name().to_string());
+            new_parent_modules.push(module_name.clone());
 
             Self::generate_module(&module_path, submodule, &new_parent_modules)?;
 
@@ -79,7 +80,7 @@ impl RustModuleGenerator {
         }
 
         // Generate mod.rs for all modules except src (src modules use main.rs or lib.rs instead)
-        if module.name() != "src" {
+        if module_name != "src" {
             let mod_rs_path = module_path.join("mod.rs");
             ContentUpdater::update_rust_module_file(&mod_rs_path, &module_declarations, None)?;
         }
@@ -235,7 +236,8 @@ mod tests {
         let base_path = temp_dir.path();
 
         let module = Module {
-            name: "domain".to_string(),
+            name: Some("domain".to_string()),
+            from: None,
             r#pub: None,
             tree: vec![],
             file: vec![
@@ -266,11 +268,13 @@ mod tests {
         let base_path = temp_dir.path();
 
         let module = Module {
-            name: "src".to_string(),
+            name: Some("src".to_string()),
+            from: None,
             r#pub: None,
             tree: vec![
                 Module {
-                    name: "domain".to_string(),
+                    name: Some("domain".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![CodeFile { name: "model".to_string(), r#pub: None }],
@@ -303,11 +307,13 @@ mod tests {
 
         let modules = vec![
             Module {
-                name: "src".to_string(),
+                name: Some("src".to_string()),
+                from: None,
                 r#pub: None,
                 tree: vec![
                     Module {
-                        name: "domain".to_string(),
+                        name: Some("domain".to_string()),
+                        from: None,
                         r#pub: None,
                         tree: vec![],
                         file: vec![],

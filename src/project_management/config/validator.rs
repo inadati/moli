@@ -78,7 +78,7 @@ impl ConfigValidator {
 
         // Validate modules (tree)
         for (i, module) in project.tree().iter().enumerate() {
-            if let Err(module_errors) = Self::validate_module(module, &format!("{}.tree[{}]", path, i)) {
+            if let Err(module_errors) = Self::validate_module(module, &format!("{}.tree[{}]", path, i), project.language()) {
                 errors.extend(module_errors);
             }
         }
@@ -91,8 +91,16 @@ impl ConfigValidator {
     }
 
     /// Validate module structure
-    fn validate_module(module: &Module, path: &str) -> Result<(), Vec<ValidationError>> {
+    fn validate_module(module: &Module, path: &str, language: &str) -> Result<(), Vec<ValidationError>> {
         let mut errors = Vec::new();
+
+        // Check that either name or from is provided
+        if module.name.is_none() && module.from.is_none() {
+            errors.push(ValidationError {
+                message: "Module must have either 'name' or 'from' field".to_string(),
+                path: path.to_string(),
+            });
+        }
 
         // Check module name
         if module.name().is_empty() {
@@ -110,9 +118,33 @@ impl ConfigValidator {
             });
         }
 
+        // If from is specified, language must be "any"
+        if module.from.is_some() && language != "any" {
+            errors.push(ValidationError {
+                message: format!("Module with 'from' field can only be used with 'lang: any' (current: {})", language),
+                path: format!("{}.from", path),
+            });
+        }
+
+        // If from is specified, tree and file must be empty
+        if module.from.is_some() {
+            if !module.subtree().is_empty() {
+                errors.push(ValidationError {
+                    message: "Module with 'from' field cannot have 'tree' (git clone target cannot have subdirectories)".to_string(),
+                    path: format!("{}.tree", path),
+                });
+            }
+            if !module.files().is_empty() {
+                errors.push(ValidationError {
+                    message: "Module with 'from' field cannot have 'file' (git clone target cannot have files)".to_string(),
+                    path: format!("{}.file", path),
+                });
+            }
+        }
+
         // Validate sub-modules (subtree)
         for (i, submodule) in module.subtree().iter().enumerate() {
-            if let Err(submodule_errors) = Self::validate_module(submodule, &format!("{}.tree[{}]", path, i)) {
+            if let Err(submodule_errors) = Self::validate_module(submodule, &format!("{}.tree[{}]", path, i), language) {
                 errors.extend(submodule_errors);
             }
         }

@@ -36,8 +36,45 @@ impl DirectoryBuilder {
         base_path: P,
         module: &Module,
     ) -> Result<()> {
-        let module_path = base_path.as_ref().join(module.name());
-        
+        let module_name = module.name();
+        let module_path = base_path.as_ref().join(&module_name);
+
+        // If this is a git clone target
+        if let Some(git_url) = module.from.as_ref() {
+            // Check if directory already exists
+            if module_path.exists() {
+                eprintln!("⚠️  Directory already exists, skipping clone: {}", module_path.display());
+                return Ok(());
+            }
+
+            // Execute git clone
+            eprintln!("🔄 Cloning repository: {} -> {}", git_url, module_name);
+            let output = std::process::Command::new("git")
+                .arg("clone")
+                .arg(git_url)
+                .arg(&module_path)
+                .output();
+
+            match output {
+                Ok(result) if result.status.success() => {
+                    eprintln!("✅ Successfully cloned: {}", module_name);
+                }
+                Ok(result) => {
+                    eprintln!("❌ Failed to clone {}: {}",
+                        module_name,
+                        String::from_utf8_lossy(&result.stderr));
+                    eprintln!("⚠️  Continuing with remaining operations...");
+                }
+                Err(e) => {
+                    eprintln!("❌ Failed to execute git clone for {}: {}", module_name, e);
+                    eprintln!("⚠️  Continuing with remaining operations...");
+                }
+            }
+
+            // Don't process subtree/files for git clone targets
+            return Ok(());
+        }
+
         // Create directory for this module
         fs::create_dir_all(&module_path)
             .with_context(|| format!("Failed to create module directory: {}", module_path.display()))?;
@@ -139,11 +176,13 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![
                         Module {
-                            name: "domain".to_string(),
+                            name: Some("domain".to_string()),
+                            from: None,
                             r#pub: None,
                             tree: vec![],
                             file: vec![],
@@ -173,7 +212,8 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![],
@@ -197,15 +237,18 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![
                         Module {
-                            name: "domain".to_string(),
+                            name: Some("domain".to_string()),
+                            from: None,
                             r#pub: None,
                             tree: vec![
                                 Module {
-                                    name: "model".to_string(),
+                                    name: Some("model".to_string()),
+                                    from: None,
                                     r#pub: None,
                                     tree: vec![],
                                     file: vec![],
@@ -239,7 +282,8 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![],
@@ -267,7 +311,8 @@ mod tests {
             file: vec![],
             tree: vec![
                 Module {
-                    name: "src".to_string(),
+                    name: Some("src".to_string()),
+                    from: None,
                     r#pub: None,
                     tree: vec![],
                     file: vec![],

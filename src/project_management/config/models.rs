@@ -23,7 +23,10 @@ pub struct Project {
 /// Module or directory structure
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Module {
-    pub name: String,
+    #[serde(default)]
+    pub name: Option<String>,
+    #[serde(default)]
+    pub from: Option<String>,
     #[serde(default)]
     pub r#pub: Option<String>,
     #[serde(default)]
@@ -90,9 +93,39 @@ impl Project {
 }
 
 impl Module {
-    /// Get module name
-    pub fn name(&self) -> &str {
-        &self.name
+    /// Get module name (resolved from name or from)
+    pub fn name(&self) -> String {
+        self.name
+            .clone()
+            .unwrap_or_else(|| {
+                self.from
+                    .as_ref()
+                    .map(|url| Self::extract_repo_name(url))
+                    .unwrap_or_else(|| String::from("unknown"))
+            })
+    }
+
+    /// Check if this module is a git clone target
+    pub fn is_git_clone(&self) -> bool {
+        self.from.is_some()
+    }
+
+    /// Get git repository URL
+    pub fn git_url(&self) -> Option<&str> {
+        self.from.as_deref()
+    }
+
+    /// Extract repository name from git URL
+    /// Supports both HTTPS and SSH formats
+    fn extract_repo_name(url: &str) -> String {
+        // Remove .git suffix if present
+        let url = url.strip_suffix(".git").unwrap_or(url);
+
+        // Extract last component from path
+        url.split('/')
+            .last()
+            .map(|s| s.to_string())
+            .unwrap_or_else(|| String::from("unknown"))
     }
 
     /// Get sub-modules (subtree)

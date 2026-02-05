@@ -58,7 +58,44 @@ impl AnyFileHandler {
         module: &Module,
     ) -> Result<()> {
         let parent_path = parent_path.as_ref();
-        let module_path = parent_path.join(module.name());
+        let module_name = module.name();
+        let module_path = parent_path.join(&module_name);
+
+        // If this is a git clone target
+        if let Some(git_url) = module.from.as_ref() {
+            // Check if directory already exists
+            if module_path.exists() {
+                eprintln!("⚠️  Directory already exists, skipping clone: {}", module_path.display());
+                return Ok(());
+            }
+
+            // Execute git clone
+            eprintln!("🔄 Cloning repository: {} -> {}", git_url, module_name);
+            let output = std::process::Command::new("git")
+                .arg("clone")
+                .arg(git_url)
+                .arg(&module_path)
+                .output();
+
+            match output {
+                Ok(result) if result.status.success() => {
+                    eprintln!("✅ Successfully cloned: {}", module_name);
+                }
+                Ok(result) => {
+                    eprintln!("❌ Failed to clone {}: {}",
+                        module_name,
+                        String::from_utf8_lossy(&result.stderr));
+                    eprintln!("⚠️  Continuing with remaining operations...");
+                }
+                Err(e) => {
+                    eprintln!("❌ Failed to execute git clone for {}: {}", module_name, e);
+                    eprintln!("⚠️  Continuing with remaining operations...");
+                }
+            }
+
+            // Don't process subtree/files for git clone targets
+            return Ok(());
+        }
 
         // Create module directory
         fs::create_dir_all(&module_path)

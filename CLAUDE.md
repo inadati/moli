@@ -63,3 +63,25 @@ moliの生成エンジンは3層のファイル保護を実装しており、コ
 
 複数プロジェクトを1つのmoli.ymlで管理可能。Rustの場合はワークスペース構成を自動生成。
 
+### git cloneサポート（2026-02-05追加）
+
+`lang: any` プロジェクトで `from` フィールドを使用することで、外部リポジトリをgit cloneできる：
+
+```yaml
+- name: docs
+  root: false
+  lang: any
+  tree:
+    - from: git@github.com:user/repo.git
+      name: external-repo  # 省略時はリポジトリ名（.git除く）を使用
+```
+
+**制約:**
+- `from` フィールドは `lang: any` でのみ使用可能
+- `from` を指定した場合、`tree` と `file` は禁止（cloneしたリポジトリは変更しない）
+- `name` または `from` のいずれかは必須
+- SSH/HTTPS両対応
+- 既存ディレクトリはスキップ、clone失敗時は警告表示して処理継続
+
+実装: `src/code_generation/language/any/file_handler.rs`
+

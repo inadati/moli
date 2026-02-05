@@ -11,27 +11,31 @@ pub struct MoliConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Project {
     pub name: String,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "is_false")]
     pub root: bool,
     pub lang: String,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub file: Vec<CodeFile>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub tree: Vec<Module>,
+}
+
+fn is_false(b: &bool) -> bool {
+    !b
 }
 
 /// Module or directory structure
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Module {
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub from: Option<String>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub r#pub: Option<String>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub tree: Vec<Module>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub file: Vec<CodeFile>,
 }
 
@@ -39,7 +43,7 @@ pub struct Module {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CodeFile {
     pub name: String,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub r#pub: Option<String>,
 }
 

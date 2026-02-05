@@ -942,6 +942,101 @@ impl YamlModifier {
         let _ = project_start;
         lines.len()
     }
+
+    /// Add a new project to the YAML content (preserves existing formatting)
+    pub fn add_project(yaml_content: &str, project_yaml: &str) -> Result<String> {
+        if yaml_content.trim().is_empty() {
+            // Empty file - just return the new project
+            return Ok(project_yaml.to_string());
+        }
+
+        // Detect blank lines between existing projects
+        let blank_lines = Self::detect_project_spacing(yaml_content);
+
+        // Build result: existing content + blank lines + new project
+        let mut result = yaml_content.to_string();
+
+        // Ensure existing content ends with newline
+        if !result.ends_with('\n') {
+            result.push('\n');
+        }
+
+        // Add blank lines (detected from existing or default to 3)
+        for _ in 0..blank_lines {
+            result.push('\n');
+        }
+
+        // Add new project
+        result.push_str(project_yaml);
+
+        // Ensure final newline
+        if !result.ends_with('\n') {
+            result.push('\n');
+        }
+
+        Ok(result)
+    }
+
+    /// Add a new project to the beginning of the YAML content (preserves existing formatting)
+    pub fn prepend_project(yaml_content: &str, project_yaml: &str) -> Result<String> {
+        if yaml_content.trim().is_empty() {
+            // Empty file - just return the new project
+            return Ok(project_yaml.to_string());
+        }
+
+        // Detect blank lines between existing projects
+        let blank_lines = Self::detect_project_spacing(yaml_content);
+
+        // Build result: new project + blank lines + existing content
+        let mut result = project_yaml.to_string();
+
+        // Ensure new project ends with newline
+        if !result.ends_with('\n') {
+            result.push('\n');
+        }
+
+        // Add blank lines (detected from existing or default to 3)
+        for _ in 0..blank_lines {
+            result.push('\n');
+        }
+
+        // Add existing content
+        result.push_str(yaml_content);
+
+        // Ensure final newline
+        if !result.ends_with('\n') {
+            result.push('\n');
+        }
+
+        Ok(result)
+    }
+
+    /// Detect the number of blank lines between projects in existing YAML
+    fn detect_project_spacing(yaml_content: &str) -> usize {
+        let lines: Vec<&str> = yaml_content.lines().collect();
+        let mut blank_count = None;
+        let mut consecutive_blanks = 0;
+        let mut seen_first_project = false;
+
+        for line in lines {
+            if line.starts_with("- name:") {
+                if seen_first_project && consecutive_blanks > 0 {
+                    // Found spacing between projects
+                    blank_count = Some(consecutive_blanks);
+                    break;
+                }
+                seen_first_project = true;
+                consecutive_blanks = 0;
+            } else if line.trim().is_empty() && seen_first_project {
+                consecutive_blanks += 1;
+            } else if !line.trim().is_empty() {
+                consecutive_blanks = 0;
+            }
+        }
+
+        // Return detected spacing or default to 3
+        blank_count.unwrap_or(3)
+    }
 }
 
 /// Represents a child entry to be added (file or subdirectory with its own children)

@@ -112,7 +112,7 @@ moli_install
 - `moli new`: 対話的プロンプトで新しいプロジェクトを初期化
 - `moli new --lang <言語>`: 指定言語で新しいプロジェクトを初期化（AI向け）
 - `moli up`: 現在の`moli.yml`仕様に基づいてコードを生成
-- `moli up claude-skill`: Claude Code向けのmoli開発スキルを生成
+- `moli add`: Claude Codeスキルをitton-claude-skills organizationから追加
 - `moli scan`: 既存プロジェクト構造をスキャンしてmoli.ymlに取り込み
 - `moli rm`: moli.ymlから削除されたモジュールを削除
 - `moli --help`: ヘルプ情報を表示

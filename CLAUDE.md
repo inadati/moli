@@ -26,14 +26,13 @@ cargo test <テスト名>
 cargo run -- new          # プロジェクト初期化（インタラクティブ）
 cargo run -- new --lang rust  # プロジェクト初期化（言語指定）
 cargo run -- up           # コード生成
-cargo run -- add          # Claude Codeスキル追加（itton-claude-skills organization）
 ```
 
 ## アーキテクチャ
 
 4層構造:
 
-- **`src/cli/`** - CLIコマンド層（clap）。`new`, `up`, `add`, `scan`, `rm`, `completion`サブコマンド
+- **`src/cli/`** - CLIコマンド層（clap）。`new`, `up`, `scan`, `rm`, `completion`サブコマンド
 - **`src/project_management/config/`** - YAML設定の解析（`parser.rs`）、バリデーション（`validator.rs`）、データモデル（`models.rs`）
 - **`src/code_generation/core/`** - コード生成エンジン。`generator.rs`がエントリーポイントで、`directory_builder.rs`と`file_builder.rs`に委譲
 - **`src/code_generation/language/`** - 言語別の生成処理（`rust/`, `go/`, `python/`, `typescript/`, `javascript/`, `any/`）
@@ -86,26 +85,4 @@ moliの生成エンジンは3層のファイル保護を実装しており、コ
 
 実装: `src/code_generation/language/any/file_handler.rs`
 
-## moli addコマンド（Claude Codeスキル追加）
-
-`moli add` は、itton-claude-skills organization からClaude Codeスキルを追加する専用コマンド：
-
-**動作：**
-1. GitHub API (`https://api.github.com/orgs/itton-claude-skills/repos`) からスキルリストを取得
-2. 対話的にファジー検索で選択
-3. `moli.yml` を作成（存在しない場合）
-4. `.claude/skills` 構造を追加
-5. 選択したスキルを `from` フィールドで追加
-
-**生成されるmoli.yml例：**
-```yaml
-- name: .claude
-  lang: any
-  tree:
-    - name: skills
-      tree:
-        - from: https://github.com/itton-claude-skills/expert-sycamore.git
-```
-
-実装: `src/cli/command/add.rs`
 

@@ -1,7 +1,6 @@
 // start auto exported by moli.
 pub mod new;
 pub mod up;
-pub mod add;
 pub mod rm;
 pub mod scan;
 pub mod completion;

@@ -1,6 +1,6 @@
 [package]
 name = "moli"
-version = "2.2.0"
+version = "2.3.0"
 edition = "2021"
 
 [[bin]]
@@ -17,8 +17,6 @@ regex = "1.10.2"
 yaml-rust = "0.4.5"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.9"
-serde_json = "1.0"
-ureq = "2.9"
 ignore = "0.4"
 
 [dev-dependencies]

@@ -977,40 +977,6 @@ impl YamlModifier {
         Ok(result)
     }
 
-    /// Add a new project to the beginning of the YAML content (preserves existing formatting)
-    pub fn prepend_project(yaml_content: &str, project_yaml: &str) -> Result<String> {
-        if yaml_content.trim().is_empty() {
-            // Empty file - just return the new project
-            return Ok(project_yaml.to_string());
-        }
-
-        // Detect blank lines between existing projects
-        let blank_lines = Self::detect_project_spacing(yaml_content);
-
-        // Build result: new project + blank lines + existing content
-        let mut result = project_yaml.to_string();
-
-        // Ensure new project ends with newline
-        if !result.ends_with('\n') {
-            result.push('\n');
-        }
-
-        // Add blank lines (detected from existing or default to 3)
-        for _ in 0..blank_lines {
-            result.push('\n');
-        }
-
-        // Add existing content
-        result.push_str(yaml_content);
-
-        // Ensure final newline
-        if !result.ends_with('\n') {
-            result.push('\n');
-        }
-
-        Ok(result)
-    }
-
     /// Detect the number of blank lines between projects in existing YAML
     fn detect_project_spacing(yaml_content: &str) -> usize {
         let lines: Vec<&str> = yaml_content.lines().collect();

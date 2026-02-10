@@ -88,11 +88,7 @@ fn build_cli() -> Command {
                         .value_parser(["rust", "go", "python", "typescript", "javascript", "markdown"])
                 )
         )
-        .subcommand(
-            Command::new("add")
-                .about("Add Claude Code skill from itton-claude-skills organization")
-        )
-        .subcommand(
+.subcommand(
             Command::new("scan")
                 .about("Scan and import unmanaged files or directories into moli.yml")
         )

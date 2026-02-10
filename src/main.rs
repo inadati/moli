@@ -29,9 +29,6 @@ fn main() -> anyhow::Result<()> {
             command::new::spec()
         )
         .subcommand(
-            command::add::spec()
-        )
-        .subcommand(
             command::rm::spec()
         )
         .subcommand(
@@ -49,9 +46,6 @@ fn main() -> anyhow::Result<()> {
         }
         Some(("new", sub_matches)) => {
             command::new::action(sub_matches)
-        }
-        Some(("add", sub_matches)) => {
-            command::add::action(sub_matches)
         }
         Some(("rm", _)) => {
             command::rm::action()

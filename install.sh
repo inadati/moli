@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION=$(curl -s https://github.com/asweed888/moli/releases.atom | grep -o -E "releases/tag/v[0-9]+\.[0-9]+\.[0-9]+" | sed 's/releases\/tag\///' | head -n 1)
+VERSION=$(curl -s https://github.com/inadati/moli/releases.atom | grep -o -E "releases/tag/v[0-9]+\.[0-9]+\.[0-9]+" | sed 's/releases\/tag\///' | head -n 1)
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -31,7 +31,7 @@ case $OS in
 esac
 
 INSTALL_TARGET="moli-${VERSION}-${TARGET}.tar.gz"
-INSTALL_TARGET_URL="https://github.com/asweed888/moli/releases/download/${VERSION}/${INSTALL_TARGET}"
+INSTALL_TARGET_URL="https://github.com/inadati/moli/releases/download/${VERSION}/${INSTALL_TARGET}"
 
 # 現在のシェルを検出して適切な設定ファイルを選択
 CURRENT_SHELL=$(basename "$SHELL")
@@ -66,7 +66,7 @@ fi
 # エイリアスチェック - 含まれていない場合のみコマンド出力
 alias_name="moli_install"
 if ! grep -q "$alias_name" "$SHELL_RC" 2>/dev/null; then
-    MESSAGES="${MESSAGES}echo 'alias $alias_name=\"curl -sSL https://raw.githubusercontent.com/asweed888/moli/main/install.sh | sh && exec \\\$SHELL -l\"' >> $SHELL_RC\n"
+    MESSAGES="${MESSAGES}echo 'alias $alias_name=\"curl -sSL https://raw.githubusercontent.com/inadati/moli/main/install.sh | sh && exec \\\$SHELL -l\"' >> $SHELL_RC\n"
 fi
 
 # メッセージがある場合のみ表示

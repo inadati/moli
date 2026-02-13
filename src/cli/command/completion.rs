@@ -93,8 +93,15 @@ fn build_cli() -> Command {
                 .about("Scan and import unmanaged files or directories into moli.yml")
         )
         .subcommand(
-            Command::new("rm")
-                .about("Remove files and directories deleted from moli.yml")
+            Command::new("sync")
+                .about("Synchronize moli.yml with the current filesystem state")
+                .arg(
+                    Arg::new("yes")
+                        .short('y')
+                        .long("yes")
+                        .help("Skip confirmation prompt")
+                        .action(clap::ArgAction::SetTrue)
+                )
         )
         .subcommand(spec())
         .version(version)

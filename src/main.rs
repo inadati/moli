@@ -29,7 +29,7 @@ fn main() -> anyhow::Result<()> {
             command::new::spec()
         )
         .subcommand(
-            command::rm::spec()
+            command::sync::spec()
         )
         .subcommand(
             command::scan::spec()
@@ -47,8 +47,8 @@ fn main() -> anyhow::Result<()> {
         Some(("new", sub_matches)) => {
             command::new::action(sub_matches)
         }
-        Some(("rm", _)) => {
-            command::rm::action()
+        Some(("sync", sub_matches)) => {
+            command::sync::action(sub_matches)
         }
         Some(("scan", _)) => {
             command::scan::action()

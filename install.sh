@@ -2,7 +2,9 @@
 
 set -e
 
-VERSION=$(curl -s https://github.com/inadati/moli/releases.atom | grep -o -E "releases/tag/v[0-9]+\.[0-9]+\.[0-9]+" | sed 's/releases\/tag\///' | head -n 1)
+REPO="inadati/moli"
+
+VERSION=$(gh release view --repo $REPO --json tagName -q '.tagName')
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -31,7 +33,16 @@ case $OS in
 esac
 
 INSTALL_TARGET="moli-${VERSION}-${TARGET}.tar.gz"
-INSTALL_TARGET_URL="https://github.com/inadati/moli/releases/download/${VERSION}/${INSTALL_TARGET}"
+
+HOME_BIN="$HOME/.local/bin"
+if [ ! -e "$HOME_BIN" ]; then
+    mkdir -p $HOME_BIN
+    echo "[info] Created directory because $HOME_BIN was not found."
+fi
+
+gh release download "$VERSION" --repo $REPO --pattern "$INSTALL_TARGET" --output - | tar -xzf - -C $HOME_BIN
+
+echo "[info] moli ${VERSION} installed to ${HOME_BIN}/moli"
 
 # 現在のシェルを検出して適切な設定ファイルを選択
 CURRENT_SHELL=$(basename "$SHELL")
@@ -47,26 +58,18 @@ case "$CURRENT_SHELL" in
     ;;
 esac
 
-HOME_BIN="$HOME/.bin"
-if [ ! -e "$HOME_BIN" ]; then
-    mkdir -p $HOME_BIN
-    echo "[info] Created directory because $HOME_BIN was not found."
-fi
-
-curl -L $INSTALL_TARGET_URL -o - | tar -xzvf - && mv ./moli $HOME_BIN
-
 # 表示用のメッセージを蓄積
 MESSAGES=""
 
-# PATH チェック - 含まれていない場合のみコマンド出力
+# PATH チェック
 if [ "${PATH#*$HOME_BIN}" = "$PATH" ]; then
-    MESSAGES="${MESSAGES}echo 'export PATH=\"\$PATH:\$HOME/.bin\"' >> $SHELL_RC\n"
+    MESSAGES="${MESSAGES}echo 'export PATH=\"\$PATH:\$HOME/.local/bin\"' >> $SHELL_RC\n"
 fi
 
-# エイリアスチェック - 含まれていない場合のみコマンド出力
+# エイリアスチェック
 alias_name="moli_install"
 if ! grep -q "$alias_name" "$SHELL_RC" 2>/dev/null; then
-    MESSAGES="${MESSAGES}echo 'alias $alias_name=\"curl -sSL https://raw.githubusercontent.com/inadati/moli/main/install.sh | sh && exec \\\$SHELL -l\"' >> $SHELL_RC\n"
+    MESSAGES="${MESSAGES}echo 'alias ${alias_name}=\"gh release download --repo ${REPO} -p 'moli-*-${TARGET}.tar.gz' --output - | tar -xzf - -C \\\$HOME/.local/bin && exec \\\$SHELL -l\"' >> $SHELL_RC\n"
 fi
 
 # メッセージがある場合のみ表示
